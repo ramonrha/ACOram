@@ -8,12 +8,13 @@
 #ifndef NODO_H_
 #define NODO_H_
 #include <vector>
+#include "Puente.h"
 
 class Nodo {
 public:
 	float Location_X;
 	float Location_Y;
-	std::vector<Nodo*> Bridges_To_Ohter_Nodes;
+	std::vector<Puente*> Bridges_To_Ohter_Nodes;
 	Nodo();
 	Nodo(float Location_X, float Location_Y);
 	void Set_Location(float Location_X, float Location_Y);
