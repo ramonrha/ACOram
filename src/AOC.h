@@ -14,6 +14,8 @@
 #define AOC_H_
 #include <vector>
 #include "Nodo.h"
+#include "Bridge.h"
+#include "Graph.h"
 
 #define Numero_De_Nodos 5
 #define Numero_De_Conexiones 10
@@ -26,8 +28,6 @@ const float Grafo[Numero_De_Nodos][Numero_De_Conexiones]={
 	{5,4, 2,3, 4,2, 6,1, 0,0}
 };
 
-
-std::vector<Nodo> arbol;
 
 
 
