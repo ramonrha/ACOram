@@ -7,25 +7,20 @@
 //============================================================================
 
 #include <iostream>
+#include <vector>
 #include "AOC.h"
 using namespace std;
 
+void Initialize_Array(std::vector< std::vector<float> > &puentes, int Num_Of_Nodes){
+	vector<float> tmp(Num_Of_Nodes,0.0);
+	for(int i=Num_Of_Nodes; i > 0; i--){
+		puentes.push_back(tmp);
+	}
+}
+
 int main() {
-	Graph c_grafo;
-	float **arreglo;
-
-	arreglo = new float*[Numero_De_Nodos];
-	for(int i = 0; i < Numero_De_Nodos; i++){
-			arreglo[i] = new float[Numero_De_Conexiones];
-	}
-
-	for(int i = 0; i < Numero_De_Nodos; i++){
-		for(int j = 0; j < Numero_De_Conexiones; j++){
-			arreglo[i][j] = Grafo[i][j];
-		}
-	}
-
-	c_grafo.Fill_Graph(arreglo,Numero_De_Nodos, Numero_De_Conexiones);
-
+	vector< vector<float> > puentes;
+	Initialize_Array(puentes,Numero_De_Nodos);
+	cout << puentes.size()<<endl;
 	return 0;
 }
