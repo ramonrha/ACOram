@@ -8,22 +8,27 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include "AOC.h"
+#include "Graph.h"
 using namespace std;
-void Initialize_Array(std::vector< std::vector<float> > &puentes, int Num_Of_Nodes);
 
-int main() {
-	std::vector< std::vector<float> > Bridge_Distance;
-	std::vector< std::vector<float> > Bridge_Pheromone;
-	Initialize_Array(Bridge_Distance,Numero_De_Nodos);
-	Bridge_Distance.
-	cout << Bridge_Distance.size()<<endl;
-	return 0;
-}
-
-void Initialize_Array(std::vector< std::vector<float> > &puentes, int Num_Of_Nodes){
-	vector<float> tmp(Num_Of_Nodes,0.0);
-	for(int i=Num_Of_Nodes; i > 0; i--){
-		puentes.push_back(tmp);
+int main(int argc, char *argv[]) {
+	Graph grafo;
+	float Coordenate_X, Coordenate_Y = 0;
+	char c=0;
+	cout << argv[1] << endl;
+	std::ifstream infile(argv[1]);
+	cout << "Leyendo archivo" << endl;
+	while(infile >> Coordenate_X >> c >> Coordenate_Y){
+		cout << Coordenate_X << c << Coordenate_Y << endl;
+		grafo.Location_X.push_back(Coordenate_X);
+		grafo.Location_Y.push_back(Coordenate_Y);
 	}
+	grafo.Set_Num_Of_Nodes();
+	grafo.Initialize_Arrays();
+	grafo.Compute_Distances();
+	cout << "0,1 ="<<grafo.Bridge_Distance.at(0).at(1) << endl;
+	cout << "1,0 ="<<grafo.Bridge_Distance.at(1).at(0) << endl;
+	return 0;
 }
