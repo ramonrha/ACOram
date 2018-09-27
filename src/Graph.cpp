@@ -40,6 +40,13 @@ void Graph::Compute_Distances(){
 					std::cout<<"Distance when i="<<i<<", j="<<j<<", "<<Distance<< std::endl;
 					this->Bridge_Distance.at(i).at(j) = Distance;
 					this->Bridge_Distance.at(j).at(i) = Distance;
+					try{
+						Distance = 1.0/Distance;
+					}catch(...){
+						Distance = 0;
+					}
+					this->n_matrix.at(i).at(j) = Distance;
+					this->n_matrix.at(j).at(i) = Distance;
 				}
 			}
 		}

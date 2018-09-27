@@ -16,6 +16,7 @@ public:
 	std::vector<float> Location_Y;
 	std::vector< std::vector<float> > Bridge_Distance;
 	std::vector< std::vector<float> > Bridge_Pheromone;
+	std::vector< std::vector<float> > n_matrix;
 	Graph();
 	void Set_Num_Of_Nodes();
 	void Initialize_Arrays();
