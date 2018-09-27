@@ -21,7 +21,7 @@ void Graph::Compute_Distances(){
 	float Distance = 0.0;
 	int Contador_J = 0;
 	float Y1,Y2,X1,X2=0;
-	if(this->Location_X.size()==0 & this->Location_Y.size()==0)
+	if(this->Location_X.size()==0 && this->Location_Y.size()==0)
 		return;
 	else{
 		if(this->Location_X.size()!=this->Location_Y.size()){

@@ -11,6 +11,7 @@
 #include <fstream>
 #include "AOC.h"
 #include "Graph.h"
+#include "Ant.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -30,5 +31,8 @@ int main(int argc, char *argv[]) {
 	grafo.Compute_Distances();
 	cout << "0,1 ="<<grafo.Bridge_Distance.at(0).at(1) << endl;
 	cout << "1,0 ="<<grafo.Bridge_Distance.at(1).at(0) << endl;
+	Ant hormiga(&grafo);
+	cout<<"la dirección de grafo es: "<< hex<<&grafo<< endl;
+	cout<<"la dirección en la hormiga del grafo es: "<<hex<<hormiga.graph << endl;
 	return 0;
 }
