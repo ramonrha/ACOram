@@ -45,7 +45,7 @@ void Ant::Sumatory_Of_Pheromones_Distances(void) {
 }
 
 bool Ant::Already_Visited(int City) {
-	for(int j=0;j<this->Num_Of_Cities;j++){
+	for(int j=0;j<this->Num_Of_Cities-1;j++){
 		if(this->Visited_Cities.at(j) == City){
 			return true;
 		}

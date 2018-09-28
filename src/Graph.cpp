@@ -62,6 +62,7 @@ void Graph::Initialize_Arrays(){
 	for(int i=this->Num_Of_Nodes; i > 0; i--){
 		this->Bridge_Distance.push_back(tmp);
 		this->Bridge_Pheromone.push_back(tmp);
+		this->n_matrix.push_back(tmp);
 	}
 }
 

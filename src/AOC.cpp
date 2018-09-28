@@ -34,5 +34,10 @@ int main(int argc, char *argv[]) {
 	Ant hormiga(&grafo,0);
 	cout<<"la dirección de grafo es: "<< hex<<&grafo<< endl;
 	cout<<"la dirección en la hormiga del grafo es: "<<hex<<hormiga.graph << endl;
+
+	cout<<"Actual city of the Ant is: "<<hormiga.Actual_City<< endl;
+	hormiga.Move_To_The_Next_City();
+	cout<<"Actual city of the Ant is: "<<hormiga.Actual_City<< endl;
+
 	return 0;
 }
