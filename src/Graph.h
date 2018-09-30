@@ -17,6 +17,9 @@ public:
 	std::vector< std::vector<float> > Bridge_Distance;
 	std::vector< std::vector<float> > Bridge_Pheromone;
 	std::vector< std::vector<float> > n_matrix;
+	std::vector< std::vector<float> > Talpha_nBeta_matrix;
+	float alpha;
+	float beta;
 	Graph();
 	void Set_Num_Of_Nodes();
 	void Initialize_Arrays();

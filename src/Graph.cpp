@@ -11,6 +11,8 @@
 
 Graph::Graph() {
 	this->Num_Of_Nodes = 0;
+	this->alpha = 0.5;
+	this->beta = 0.5;
 }
 
 void Graph::Set_Num_Of_Nodes() {
@@ -19,6 +21,7 @@ void Graph::Set_Num_Of_Nodes() {
 
 void Graph::Compute_Distances(){
 	float Distance = 0.0;
+	float tau,n_dist = 0.0;
 	int Contador_J = 0;
 	float Y1,Y2,X1,X2=0;
 	if(this->Location_X.size()==0 && this->Location_Y.size()==0)
@@ -41,12 +44,17 @@ void Graph::Compute_Distances(){
 					this->Bridge_Distance.at(i).at(j) = Distance;
 					this->Bridge_Distance.at(j).at(i) = Distance;
 					try{
-						Distance = 1.0/Distance;
+						n_dist = 1.0/Distance;
 					}catch(...){
-						Distance = 0;
+						n_dist = 0;
 					}
-					this->n_matrix.at(i).at(j) = Distance;
-					this->n_matrix.at(j).at(i) = Distance;
+					this->n_matrix.at(i).at(j) = n_dist;
+					this->n_matrix.at(j).at(i) = n_dist;
+					n_dist = pow(n_dist,this->beta);
+					tau = pow(this->Bridge_Pheromone.at(i).at(j), this->alpha); //T_ij x n_ij
+					tau = tau * n_dist;
+					this->Talpha_nBeta_matrix.at(i).at(j) = tau;
+					this->Talpha_nBeta_matrix.at(j).at(i) = tau;
 				}
 			}
 		}
@@ -58,11 +66,12 @@ Graph::~Graph() {
 }
 
 void Graph::Initialize_Arrays(){
-	std::vector<float> tmp(this->Num_Of_Nodes,0.0);
+	std::vector<float> tmp(this->Num_Of_Nodes,1.0);
 	for(int i=this->Num_Of_Nodes; i > 0; i--){
 		this->Bridge_Distance.push_back(tmp);
 		this->Bridge_Pheromone.push_back(tmp);
 		this->n_matrix.push_back(tmp);
+		this->Talpha_nBeta_matrix.push_back(tmp);
 	}
 }
 

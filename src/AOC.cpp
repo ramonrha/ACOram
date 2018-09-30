@@ -31,13 +31,29 @@ int main(int argc, char *argv[]) {
 	grafo.Compute_Distances();
 	cout << "0,1 ="<<grafo.Bridge_Distance.at(0).at(1) << endl;
 	cout << "1,0 ="<<grafo.Bridge_Distance.at(1).at(0) << endl;
+
 	Ant hormiga(&grafo,0);
+	Ant hormiga2(&grafo,4);
 	cout<<"la dirección de grafo es: "<< hex<<&grafo<< endl;
 	cout<<"la dirección en la hormiga del grafo es: "<<hex<<hormiga.graph << endl;
-
-	cout<<"Actual city of the Ant is: "<<hormiga.Actual_City<< endl;
+	for(int i = 0; i<grafo.Num_Of_Nodes; i++){
+	cout<<"Actual city of the Ant is: "<<dec<<hormiga.Actual_City<< endl;
 	hormiga.Move_To_The_Next_City();
-	cout<<"Actual city of the Ant is: "<<hormiga.Actual_City<< endl;
-
+	hormiga2.Move_To_The_Next_City();
+	}
+	hormiga.Compute_Traveled_Distance();
+	cout<<"Distance traveled by hormiga1: "<<hormiga.Traveled_Distance<<endl;
+	/*cout<<"ciudades visitadas por la hormiga1"<< endl;
+	while(!hormiga.Visited_Cities.empty()){
+		cout<<"ciudad " << hormiga.Visited_Cities.back() << endl;
+		hormiga.Visited_Cities.pop_back();
+	}*/
+	hormiga2.Compute_Traveled_Distance();
+	cout<<"Distance traveled by hormiga2: "<<hormiga2.Traveled_Distance<<endl;
+	/*cout<<"ciudades visitadas por la hormiga1"<< endl;
+	while(!hormiga2.Visited_Cities.empty()){
+			cout<<"ciudad " << hormiga2.Visited_Cities.back() << endl;
+			hormiga2.Visited_Cities.pop_back();
+	}*/
 	return 0;
 }
