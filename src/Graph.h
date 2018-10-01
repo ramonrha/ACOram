@@ -20,10 +20,12 @@ public:
 	std::vector< std::vector<float> > Talpha_nBeta_matrix;
 	float alpha;
 	float beta;
+	float ro;
 	Graph();
 	void Set_Num_Of_Nodes();
 	void Initialize_Arrays();
 	void Compute_Distances();
+	void Evaporate_Pheromones();
 	virtual ~Graph();
 };
 

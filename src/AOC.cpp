@@ -15,10 +15,18 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+	//variables para el hormiguero y hormigas
 	Graph grafo;
+	vector<Ant> hormiguero;
 	float Coordenate_X, Coordenate_Y = 0;
 	char c=0;
+	float Best_Solution_Distance;
+	int Best_Solution;
+
+	//Eco del archivo donde se obtienen los datos
 	cout << argv[1] << endl;
+
+	//Obtención de datos
 	std::ifstream infile(argv[1]);
 	cout << "Leyendo archivo" << endl;
 	while(infile >> Coordenate_X >> c >> Coordenate_Y){
@@ -26,34 +34,63 @@ int main(int argc, char *argv[]) {
 		grafo.Location_X.push_back(Coordenate_X);
 		grafo.Location_Y.push_back(Coordenate_Y);
 	}
+
+	//Generar grafo
 	grafo.Set_Num_Of_Nodes();
 	grafo.Initialize_Arrays();
 	grafo.Compute_Distances();
-	cout << "0,1 ="<<grafo.Bridge_Distance.at(0).at(1) << endl;
-	cout << "1,0 ="<<grafo.Bridge_Distance.at(1).at(0) << endl;
 
-	Ant hormiga(&grafo,0);
-	Ant hormiga2(&grafo,4);
-	cout<<"la dirección de grafo es: "<< hex<<&grafo<< endl;
-	cout<<"la dirección en la hormiga del grafo es: "<<hex<<hormiga.graph << endl;
-	for(int i = 0; i<grafo.Num_Of_Nodes; i++){
-	cout<<"Actual city of the Ant is: "<<dec<<hormiga.Actual_City<< endl;
-	hormiga.Move_To_The_Next_City();
-	hormiga2.Move_To_The_Next_City();
+	//Intanciación de hormigas
+	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
+		hormiguero.push_back(Ant(&grafo,i));
 	}
-	hormiga.Compute_Traveled_Distance();
-	cout<<"Distance traveled by hormiga1: "<<hormiga.Traveled_Distance<<endl;
-	/*cout<<"ciudades visitadas por la hormiga1"<< endl;
-	while(!hormiga.Visited_Cities.empty()){
-		cout<<"ciudad " << hormiga.Visited_Cities.back() << endl;
-		hormiga.Visited_Cities.pop_back();
-	}*/
-	hormiga2.Compute_Traveled_Distance();
-	cout<<"Distance traveled by hormiga2: "<<hormiga2.Traveled_Distance<<endl;
-	/*cout<<"ciudades visitadas por la hormiga1"<< endl;
-	while(!hormiga2.Visited_Cities.empty()){
-			cout<<"ciudad " << hormiga2.Visited_Cities.back() << endl;
-			hormiga2.Visited_Cities.pop_back();
-	}*/
+
+	//Hacer caminar a todas las hormigas :)
+	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
+		for(int j = 0; j < (int)grafo.Num_Of_Nodes;j++){
+			hormiguero.at(i).Move_To_The_Next_City();
+		}
+	}
+
+	//Obtener distancias de cada hormiga para elegir la mejor solución
+	for(int i = 0; i < (int)grafo.Num_Of_Nodes; i++){
+		hormiguero.at(i).Compute_Traveled_Distance();
+		cout<<"Distancia recorrida: "<< hormiguero.at(i).Traveled_Distance << endl;
+		if(i == 0){
+			Best_Solution_Distance = hormiguero.at(i).Traveled_Distance;
+			Best_Solution = i;
+		}else{
+			if(hormiguero.at(i).Traveled_Distance < Best_Solution_Distance){
+				Best_Solution_Distance = hormiguero.at(i).Traveled_Distance;
+				Best_Solution = i;
+			}else{
+				//no operation
+			}
+		}
+	}
+
+	//incremento de feromonas en la ruta de la mejor hormiga
+	for(int j = 0; j < (int)grafo.Num_Of_Nodes;j++){
+		cout<<"hormiga "<<j<<" Delta_T = "<<hormiguero.at(j).Delta_T<<endl;
+		hormiguero.at(j).Increment_Bridge_Pheromone();
+	}
+	//tes: Delete when no testing.....
+	cout<<"la major solución es"<<endl;
+	cout<<"hormiga " << Best_Solution <<" con Distancia = "<<Best_Solution_Distance<< endl;
+	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
+		for(int j = 0; j < (int)grafo.Num_Of_Nodes;j++){
+			cout<<"feromona en ij = ["<<i<<", "<<j<<"] = "<<grafo.Bridge_Pheromone.at(i).at(j)<<endl;
+		}
+	}
+
+	//evaporación de feromonas en todo el mapa
+	grafo.ro = 0.02;
+	grafo.Evaporate_Pheromones();
+	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
+		for(int j = 0; j < (int)grafo.Num_Of_Nodes;j++){
+			cout<<"feromona en ij = ["<<i<<", "<<j<<"] = "<<grafo.Bridge_Pheromone.at(i).at(j)<<endl;
+		}
+	}
+
 	return 0;
 }

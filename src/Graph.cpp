@@ -11,8 +11,9 @@
 
 Graph::Graph() {
 	this->Num_Of_Nodes = 0;
-	this->alpha = 0.5;
-	this->beta = 0.5;
+	this->alpha = 1.0;
+	this->beta = 5.0;
+	this->ro = 0.5;
 }
 
 void Graph::Set_Num_Of_Nodes() {
@@ -61,6 +62,20 @@ void Graph::Compute_Distances(){
 	}
 }
 
+void Graph::Evaporate_Pheromones() {
+	float Distance = 0.0;
+	float tau = 0.0;
+	int Contador_J = 0;
+	for(int i = 0; i<(int)this->Num_Of_Nodes; i++){
+		Contador_J++;
+		for(int j=Contador_J; j<(int)this->Num_Of_Nodes; j++){
+			tau = (1.0 - this->ro)*this->Bridge_Pheromone.at(i).at(j);
+			this->Bridge_Pheromone.at(i).at(j) = tau;
+			this->Bridge_Pheromone.at(j).at(i) = tau;
+		}
+	}
+}
+
 Graph::~Graph() {
 	// TODO Auto-generated destructor stub
 }
@@ -72,6 +87,12 @@ void Graph::Initialize_Arrays(){
 		this->Bridge_Pheromone.push_back(tmp);
 		this->n_matrix.push_back(tmp);
 		this->Talpha_nBeta_matrix.push_back(tmp);
+	}
+	for(int i=0; i< this->Num_Of_Nodes; i++){
+		this->Bridge_Distance.at(i).at(i) = 0.0;
+		this->Bridge_Pheromone.at(i).at(i) = 0.0;
+		this->n_matrix.at(i).at(i) = 0.0;
+		this->Talpha_nBeta_matrix.at(i).at(i) = 0.0;
 	}
 }
 

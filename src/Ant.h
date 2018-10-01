@@ -21,6 +21,7 @@ public:
 	float Sumatory_Of_Pheromones;
 	float Probability_ij;
 	float Traveled_Distance;
+	float Delta_T;
 	Ant();
 	Ant(Graph *Graph_Input, int Actual_City);
 	bool Do_I_know_City(int City_Number);
@@ -29,6 +30,7 @@ public:
 	void Sumatory_Of_Pheromones_Distances(void);
 	void Compute_Traveled_Distance(void);
 	bool Already_Visited(int City);
+	void Increment_Bridge_Pheromone(void);
 	virtual ~Ant();
 };
 

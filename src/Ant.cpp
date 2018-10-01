@@ -16,6 +16,7 @@ Ant::Ant() {
 	this->Next_Cyti = 0;
 	this->Probability_ij = 0.0;
 	this->Traveled_Distance = 0.0;
+	this->Delta_T = 0.0;
 }
 
 float Ant::Probability_For_Next_Move(int Next_City) {
@@ -72,7 +73,7 @@ void Ant::Move_To_The_Next_City(void) {
 
 		}
 	}
-	//beggin travel to the next city
+	//begin travel to the next city
 	if(this->Actual_City != this->Next_Cyti)
 		this->Visited_Cities.push_back(this->Next_Cyti);
 	this->Actual_City = this->Next_Cyti;
@@ -90,6 +91,26 @@ void Ant::Compute_Traveled_Distance(void) {
 		this->Traveled_Distance += this->graph->Bridge_Distance.at(Previous_City).at(Actual_City);
 		}
 	}
+	try{
+		this->Delta_T = 1.0 / this->Traveled_Distance;
+	}catch(...){
+		this->Delta_T = 0.0;
+	}
+}
+
+void Ant::Increment_Bridge_Pheromone(void) {
+	int Actual_City = 0;
+	int Previous_City = 0;
+	for(int i = 0; i < (int)this->Visited_Cities.size();i++){
+		Previous_City = Actual_City;
+		Actual_City = this->Visited_Cities.at(i);
+		if(i == 0){
+			continue;//No operation because Ant hasn't moved.
+		}else{
+			this->graph->Bridge_Pheromone.at(Previous_City).at(Actual_City) += this->Delta_T;
+			this->graph->Bridge_Pheromone.at(Actual_City).at(Previous_City) += this->Delta_T;
+		}
+	}
 }
 
 Ant::~Ant() {
@@ -105,4 +126,5 @@ Ant::Ant(Graph *Graph_Input,int Actual_City) {
 	this->Probability_ij = 0.0;
 	this->Visited_Cities.push_back(this->Actual_City);
 	this->Traveled_Distance = 0.0;
+	this->Delta_T = 0.0;
 }
