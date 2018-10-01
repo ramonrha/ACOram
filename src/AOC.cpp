@@ -12,16 +12,40 @@
 #include "AOC.h"
 #include "Graph.h"
 #include "Ant.h"
+#include "AntColony.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
 	//variables para el hormiguero y hormigas
+
+	AntColony colonia;
+	vector<Ant> hormigas_campeonas;
+
+	colonia.Retreive_Datos_From_File(argv[1]);
+	colonia.Initialize_Colony();
+	colonia.grafo.ro = 0.5;
+	for(int i= 0; i < 10; i++){
+		colonia.Execute_Cycle();
+		hormigas_campeonas.push_back(colonia.hormiguero.at(colonia.Best_Solution));
+	}
+	cout <<endl<< "Drop de hormigas campeonas:" << endl;
+	while(!hormigas_campeonas.empty()){
+		cout<<"Distancia = "<<colonia.Best_Solution_Distance << endl;
+		while(!hormigas_campeonas.back().Visited_Cities.empty()){
+			//cout<<"Ciudad "<<hormigas_campeonas.back().Visited_Cities.back() << endl;
+			hormigas_campeonas.back().Visited_Cities.pop_back();
+		}
+		cout << endl;
+		hormigas_campeonas.pop_back();
+	}
+	return 0;
+
 	Graph grafo;
 	vector<Ant> hormiguero;
 	float Coordenate_X, Coordenate_Y = 0;
 	char c=0;
-	float Best_Solution_Distance;
-	int Best_Solution;
+	float Best_Solution_Distance=0.0;
+	int Best_Solution=0.0;
 
 	//Eco del archivo donde se obtienen los datos
 	cout << argv[1] << endl;

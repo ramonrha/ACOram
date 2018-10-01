@@ -24,6 +24,7 @@ public:
 	float Delta_T;
 	Ant();
 	Ant(Graph *Graph_Input, int Actual_City);
+	void Reboot(Graph *Graph_Input, int Actual_City);
 	bool Do_I_know_City(int City_Number);
 	float Probability_For_Next_Move(int Next_City);//La hormiga se cuestiona a donde ir
 	void Move_To_The_Next_City(void);

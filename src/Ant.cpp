@@ -128,3 +128,15 @@ Ant::Ant(Graph *Graph_Input,int Actual_City) {
 	this->Traveled_Distance = 0.0;
 	this->Delta_T = 0.0;
 }
+
+void Ant::Reboot(Graph* Graph_Input, int Actual_City) {
+	this->Actual_City = Actual_City;
+	this->Next_Cyti = 0;
+	this->graph = Graph_Input;
+	this->Num_Of_Cities = this->graph->Location_X.size();
+	this->Sumatory_Of_Pheromones = 0.0;
+	this->Probability_ij = 0.0;
+	this->Visited_Cities.push_back(this->Actual_City);
+	this->Traveled_Distance = 0.0;
+	this->Delta_T = 0.0;
+}
