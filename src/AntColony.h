@@ -19,6 +19,7 @@ public:
 	std::vector<Ant> hormiguero;
 	float Best_Solution_Distance;
 	int Best_Solution;
+	bool vervose;
 
 	AntColony();
 	virtual ~AntColony();

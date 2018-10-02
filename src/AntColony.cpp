@@ -12,11 +12,14 @@ using namespace std;
 AntColony::AntColony() {
 	this->Best_Solution = 0;
 	this->Best_Solution_Distance = 0.0;
+	//modificación de ganancias alpha, beta y Ro
+	this->grafo.alpha = 1.0;
+	this->grafo.beta  = 0.0;
+	this->grafo.ro    = 0.05;
+	this->vervose = false;
 }
 
-AntColony::~AntColony() {
-	// TODO Auto-generated destructor stub
-}
+AntColony::~AntColony() {}
 
 void AntColony::Retreive_Datos_From_File(char* argv) {
 	float Coordenate_X, Coordenate_Y = 0;
@@ -24,7 +27,7 @@ void AntColony::Retreive_Datos_From_File(char* argv) {
 	std::ifstream infile(argv);
 	cout << "Leyendo archivo" << endl;
 	while(infile >> Coordenate_X >> c >> Coordenate_Y){
-		cout << Coordenate_X << c << Coordenate_Y << endl;
+		//cout << Coordenate_X << c << Coordenate_Y << endl;
 		this->grafo.Location_X.push_back(Coordenate_X);
 		this->grafo.Location_Y.push_back(Coordenate_Y);
 	}
@@ -36,11 +39,6 @@ void AntColony::Generate_Graph() {
 	this->grafo.Set_Num_Of_Nodes();
 	this->grafo.Initialize_Arrays();
 	this->grafo.Compute_Distances();
-
-	//modificación de ganancias alpha, beta y Ro
-	this->grafo.alpha=1.0;
-	this->grafo.beta=0.0;
-	this->grafo.ro = 0.5;
 }
 
 void AntColony::Generate_Ants() {
@@ -66,7 +64,8 @@ void AntColony::Compute_Distances() {
 	//Obtener distancias de cada hormiga para elegir la mejor solución
 	for(int i = 0; i < (int)this->grafo.Num_Of_Nodes; i++){
 		this->hormiguero.at(i).Compute_Traveled_Distance();
-		cout<<"Distancia recorrida: "<< this->hormiguero.at(i).Traveled_Distance << endl;
+		if(this->vervose)
+			cout<<"Distancia recorrida: "<< this->hormiguero.at(i).Traveled_Distance << endl;
 		if(i == 0){
 			this->Best_Solution_Distance = this->hormiguero.at(i).Traveled_Distance;
 			this->Best_Solution = i;
@@ -79,24 +78,27 @@ void AntColony::Compute_Distances() {
 			}
 		}
 	}
+		if(this->vervose)
+			cout<<endl;
 }
 
 void AntColony::Increment_Pheromones() {
-	int Jcounter = 0;
+	//int Jcounter = 0;
 	//incremento de feromonas en la ruta de la mejor hormiga
 	for(int j = 0; j < (int)this->grafo.Num_Of_Nodes;j++){
 		//cout<<"hormiga "<<j<<" Delta_T = "<<this->hormiguero.at(j).Delta_T<<endl;
 		this->hormiguero.at(j).Increment_Bridge_Pheromone();
 	}
 	//tes: Delete when no testing.....
-	cout<<"Incremento de feromona terminado"<<endl;
+	//cout<<"Incremento de feromona terminado"<<endl;
 	//cout<<"hormiga " << this->Best_Solution <<" con Distancia = "<<this->Best_Solution_Distance<< endl;
-	for(int i = 0; i < (int)this->grafo.Num_Of_Nodes;i++){
+	/*for(int i = 0; i < (int)this->grafo.Num_Of_Nodes;i++){
 		Jcounter++;
+		//imprimer la feromona actual
 		for(int j = Jcounter; j < (int)this->grafo.Num_Of_Nodes;j++){
 			cout<<"feromona en ij = ["<<i<<", "<<j<<"] = "<<this->grafo.Bridge_Pheromone.at(i).at(j)<<endl;
 		}
-	}
+	}*/
 }
 
 void AntColony::Evaporate_Pheromones() {

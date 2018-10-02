@@ -42,13 +42,13 @@ void Graph::Compute_Distances(){
 					Distance = pow((Y2 - Y1),2);
 					Distance += pow((X2 - X1),2);
 					Distance = sqrt(Distance);
-					std::cout<<"Distance when i="<<i<<", j="<<j<<", "<<Distance<< std::endl;
+					//std::cout<<"Distance when i="<<i<<", j="<<j<<", "<<Distance<< std::endl;
 					this->Bridge_Distance.at(i).at(j) = Distance;
 					this->Bridge_Distance.at(j).at(i) = Distance;
-					try{
-						n_dist = 1.0/Distance;
-					}catch(...){
+					if(Distance==0.0){
 						n_dist = 0;
+					}else{
+						n_dist = 1.0/Distance;
 					}
 					this->n_matrix.at(i).at(j) = n_dist;
 					this->n_matrix.at(j).at(i) = n_dist;
@@ -57,26 +57,28 @@ void Graph::Compute_Distances(){
 					tau = tau * n_dist;
 					this->Talpha_nBeta_matrix.at(i).at(j) = tau;
 					this->Talpha_nBeta_matrix.at(j).at(i) = tau;
+					//std::cout<<"Tij x nij at ["<<i<<", "<<j<<"] = "<<this->Talpha_nBeta_matrix.at(i).at(j)<< std::endl;
 				}
 			}
 		}
 	}
+	//std::cout << std::endl;
 }
 
 void Graph::Evaporate_Pheromones() {
-	float Distance = 0.0;
 	float tau = 0.0;
 	int Contador_J = 0;
-	std::cout<<"evaporación de feromonoas"<<std::endl;
+	//std::cout<<"evaporación de feromonoas terminado"<<std::endl<<std::endl;
 	for(int i = 0; i<(int)this->Num_Of_Nodes; i++){
 		Contador_J++;
 		for(int j=Contador_J; j<(int)this->Num_Of_Nodes; j++){
 			tau = (1.0 - this->ro)*this->Bridge_Pheromone.at(i).at(j);
-			std::cout<<"Pheromone at ["<<i<<","<<j<<"] = "<<tau<<std::endl;
+			//std::cout<<"Pheromone at ["<<i<<","<<j<<"] = "<<tau<<std::endl;
 			this->Bridge_Pheromone.at(i).at(j) = tau;
 			this->Bridge_Pheromone.at(j).at(i) = tau;
 		}
 	}
+	this->Compute_Tau_nMatrix_Again();
 }
 
 Graph::~Graph() {
@@ -106,10 +108,25 @@ void Graph::Initialize_Arrays(){
 	for(int i = 0; i < (int)this->Bridge_Pheromone.size(); i++){
 		j_index++;
 		for(int j = j_index; j<(int)this->Bridge_Pheromone.size(); j++){
-			this->Bridge_Pheromone.at(i).at(j) = 0.0;//dist(mt);
+			this->Bridge_Pheromone.at(i).at(j) = 1.0;//dist(mt);
 			this->Bridge_Pheromone.at(j).at(i) = this->Bridge_Pheromone.at(i).at(j);
-			std::cout << "Bridge_Pheromote at ["<<i<<", "<<j<<"] = "<<this->Bridge_Pheromone.at(i).at(j) << std::endl;
+			//std::cout << "Bridge_Pheromote at ["<<i<<", "<<j<<"] = "<<this->Bridge_Pheromone.at(i).at(j) << std::endl;
 		}
 	}
 }
 
+void Graph::Compute_Tau_nMatrix_Again() {
+	float tau, n_dist = 0.0;
+	int Contador_J = 0;
+	for(int i = 0; i<(int)this->Location_X.size(); i++){
+		Contador_J++;
+		for(int j=Contador_J; j<(int)this->Location_X.size(); j++){
+			n_dist = pow(this->n_matrix.at(i).at(j),this->beta);
+			tau = pow(this->Bridge_Pheromone.at(i).at(j),this->alpha);
+			tau = tau * n_dist;//T_ij x n_ij
+			this->Talpha_nBeta_matrix.at(i).at(j) = tau;
+			this->Talpha_nBeta_matrix.at(j).at(i) = tau;
+			//std::cout<<"Tij x nij at ["<<i<<", "<<j<<"] = "<<this->Talpha_nBeta_matrix.at(i).at(j)<< std::endl;
+		}
+	}
+}

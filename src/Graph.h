@@ -25,6 +25,7 @@ public:
 	void Set_Num_Of_Nodes();
 	void Initialize_Arrays();
 	void Compute_Distances();
+	void Compute_Tau_nMatrix_Again();
 	void Evaporate_Pheromones();
 	virtual ~Graph();
 };

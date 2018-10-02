@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <string>
 #include "AOC.h"
 #include "Graph.h"
 #include "Ant.h"
@@ -17,14 +18,48 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 	//variables para el hormiguero y hormigas
-
+	int ciclos = 0;
+	std::string string1 ("-v");
 	AntColony colonia;
 	vector<Ant> hormigas_campeonas;
 
+	//recopilando datos adicionales
+	if(argc == 6){
+		ciclos = atoi(argv[2]);
+		colonia.grafo.alpha = std::stof(argv[2]);
+		colonia.grafo.beta = std::stof(argv[3]);
+		colonia.grafo.ro = std::stof(argv[4]);
+		cout<<"Alpha = "<<colonia.grafo.alpha<< endl;
+		cout<<"Beta = "<<colonia.grafo.beta<< endl;
+		cout<<"Ro = "<<colonia.grafo.ro<< endl;
+		cout<<"Ver = False"<< endl;
+	}else{
+		if(argc == 7){
+			ciclos = atoi(argv[2]);
+			colonia.grafo.alpha = std::stof(argv[2]);
+			colonia.grafo.beta = std::stof(argv[3]);
+			colonia.grafo.ro = std::stof(argv[4]);
+			if(atoi(argv[6]) == 1){
+				cout<<"vervose"<<endl;
+				colonia.vervose = true;
+			}
+			cout<<"Alpha = "<<colonia.grafo.alpha<< endl;
+			cout<<"Beta = "<<colonia.grafo.beta<< endl;
+			cout<<"Ro = "<<colonia.grafo.ro<< endl;
+			cout<<"ver = TRUE ("<<argv[6]<<")"<< endl;
+		}
+		else{
+			cout<<"   ¡Sugerencia!    "<<endl;
+			cout<<"inputs.csv 3 5.0 0.0 0.05"<<endl;
+			cout<<"3 = numero de ciclos"<<endl;
+			cout<<"5.0 0.0 7 0.05 son Alpha, Beta y Ro"<<endl;
+			cout<<"un 1 adicional inmprimirá resultados de todas las hormigas <1 = true, 0 = false> (Ver)"<<endl;
+		}
+	}
+
 	colonia.Retreive_Datos_From_File(argv[1]);
 	colonia.Initialize_Colony();
-	colonia.grafo.ro = 0.5;
-	for(int i= 0; i < 1; i++){
+	for(int i= 0; i < ciclos; i++){
 		colonia.Execute_Cycle();
 		hormigas_campeonas.push_back(colonia.hormiguero.at(colonia.Best_Solution));
 	}
@@ -35,86 +70,7 @@ int main(int argc, char *argv[]) {
 			//cout<<"Ciudad "<<hormigas_campeonas.back().Visited_Cities.back() << endl;
 			hormigas_campeonas.back().Visited_Cities.pop_back();
 		}
-		cout << endl;
 		hormigas_campeonas.pop_back();
 	}
-	return 0;
-
-	Graph grafo;
-	vector<Ant> hormiguero;
-	float Coordenate_X, Coordenate_Y = 0;
-	char c=0;
-	float Best_Solution_Distance=0.0;
-	int Best_Solution=0.0;
-
-	//Eco del archivo donde se obtienen los datos
-	cout << argv[1] << endl;
-
-	//Obtención de datos
-	std::ifstream infile(argv[1]);
-	cout << "Leyendo archivo" << endl;
-	while(infile >> Coordenate_X >> c >> Coordenate_Y){
-		cout << Coordenate_X << c << Coordenate_Y << endl;
-		grafo.Location_X.push_back(Coordenate_X);
-		grafo.Location_Y.push_back(Coordenate_Y);
-	}
-
-	//Generar grafo
-	grafo.Set_Num_Of_Nodes();
-	grafo.Initialize_Arrays();
-	grafo.Compute_Distances();
-
-	//Intanciación de hormigas
-	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
-		hormiguero.push_back(Ant(&grafo,i));
-	}
-
-	//Hacer caminar a todas las hormigas :)
-	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
-		for(int j = 0; j < (int)grafo.Num_Of_Nodes;j++){
-			hormiguero.at(i).Move_To_The_Next_City();
-		}
-	}
-
-	//Obtener distancias de cada hormiga para elegir la mejor solución
-	for(int i = 0; i < (int)grafo.Num_Of_Nodes; i++){
-		hormiguero.at(i).Compute_Traveled_Distance();
-		cout<<"Distancia recorrida: "<< hormiguero.at(i).Traveled_Distance << endl;
-		if(i == 0){
-			Best_Solution_Distance = hormiguero.at(i).Traveled_Distance;
-			Best_Solution = i;
-		}else{
-			if(hormiguero.at(i).Traveled_Distance < Best_Solution_Distance){
-				Best_Solution_Distance = hormiguero.at(i).Traveled_Distance;
-				Best_Solution = i;
-			}else{
-				//no operation
-			}
-		}
-	}
-
-	//incremento de feromonas en la ruta de la mejor hormiga
-	for(int j = 0; j < (int)grafo.Num_Of_Nodes;j++){
-		cout<<"hormiga "<<j<<" Delta_T = "<<hormiguero.at(j).Delta_T<<endl;
-		hormiguero.at(j).Increment_Bridge_Pheromone();
-	}
-	//tes: Delete when no testing.....
-	cout<<"la major solución es"<<endl;
-	cout<<"hormiga " << Best_Solution <<" con Distancia = "<<Best_Solution_Distance<< endl;
-	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
-		for(int j = 0; j < (int)grafo.Num_Of_Nodes;j++){
-			cout<<"feromona en ij = ["<<i<<", "<<j<<"] = "<<grafo.Bridge_Pheromone.at(i).at(j)<<endl;
-		}
-	}
-
-	//evaporación de feromonas en todo el mapa
-	grafo.ro = 0.02;
-	grafo.Evaporate_Pheromones();
-	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
-		for(int j = 0; j < (int)grafo.Num_Of_Nodes;j++){
-			cout<<"feromona en ij = ["<<i<<", "<<j<<"] = "<<grafo.Bridge_Pheromone.at(i).at(j)<<endl;
-		}
-	}
-
 	return 0;
 }
