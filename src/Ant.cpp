@@ -24,13 +24,16 @@ float Ant::Probability_For_Next_Move(int Next_City) {
 	float numerador1,numerador2 = 0.0;
 	float denominador = 0.0;
 	numerador1 = this->graph->Bridge_Pheromone.at(this->Actual_City).at(Next_City);
-	numerador1 = pow(numerador1,0.5);
+	numerador1 = pow(numerador1,this->graph->alpha);
 	numerador2 = this->graph->n_matrix.at(this->Actual_City).at(Next_City);
-	numerador2 = pow(numerador2, 0.5);
+	numerador2 = pow(numerador2,this->graph->beta);
 	numerador1 = numerador1 * numerador2;
 	this->Sumatory_Of_Pheromones_Distances();
 	denominador = this->Sumatory_Of_Pheromones;
-	Probability_ij = numerador1 / denominador;
+	if(denominador == 0.0)
+		Probability_ij = 0.0;
+	else
+		Probability_ij = numerador1 / denominador;
 	return Probability_ij;
 }
 
@@ -59,7 +62,7 @@ bool Ant::Already_Visited(int City) {
 
 void Ant::Move_To_The_Next_City(void) {
 	float Probability_ij = 0.0;
-	this->Probability_ij = 0.0;
+	this->Probability_ij = -1.0;
 	for(int i = 0; i < this->Num_Of_Cities; i++){
 		if(this->Already_Visited(i)){
 			continue;
@@ -68,7 +71,6 @@ void Ant::Move_To_The_Next_City(void) {
 			if(Probability_ij >= this->Probability_ij){
 				this->Next_Cyti = i;
 				this->Probability_ij = Probability_ij;
-
 			}
 
 		}
@@ -88,14 +90,13 @@ void Ant::Compute_Traveled_Distance(void) {
 		if(i == 0){
 			continue;//No operation because Ant hasn't moved.
 		}else{
-		this->Traveled_Distance += this->graph->Bridge_Distance.at(Previous_City).at(Actual_City);
+			this->Traveled_Distance += this->graph->Bridge_Distance.at(Previous_City).at(Actual_City);
 		}
 	}
-	try{
-		this->Delta_T = 1.0 / this->Traveled_Distance;
-	}catch(...){
+	if(this->Traveled_Distance == 0.0)
 		this->Delta_T = 0.0;
-	}
+	else
+		this->Delta_T = 1.0 / this->Traveled_Distance;
 }
 
 void Ant::Increment_Bridge_Pheromone(void) {
@@ -131,11 +132,13 @@ Ant::Ant(Graph *Graph_Input,int Actual_City) {
 
 void Ant::Reboot(Graph* Graph_Input, int Actual_City) {
 	this->Actual_City = Actual_City;
-	this->Next_Cyti = 0;
+	this->Next_Cyti = Actual_City;
 	this->graph = Graph_Input;
 	this->Num_Of_Cities = this->graph->Location_X.size();
 	this->Sumatory_Of_Pheromones = 0.0;
 	this->Probability_ij = 0.0;
+	while(!this->Visited_Cities.empty())
+		this->Visited_Cities.pop_back();
 	this->Visited_Cities.push_back(this->Actual_City);
 	this->Traveled_Distance = 0.0;
 	this->Delta_T = 0.0;

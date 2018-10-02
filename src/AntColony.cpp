@@ -36,15 +36,25 @@ void AntColony::Generate_Graph() {
 	this->grafo.Set_Num_Of_Nodes();
 	this->grafo.Initialize_Arrays();
 	this->grafo.Compute_Distances();
+
+	//modificación de ganancias alpha, beta y Ro
+	this->grafo.alpha=1.0;
+	this->grafo.beta=0.0;
+	this->grafo.ro = 0.5;
 }
 
 void AntColony::Generate_Ants() {
+	//Genera una hormiga por cada nodo
 	for(int i = 0; i < (int)grafo.Num_Of_Nodes;i++){
 		this->hormiguero.push_back(Ant(&grafo,i));
 	}
 }
 
 void AntColony::Walk_Ants() {
+	/* camina todas las hormigas contra todos los nodos
+	 * 'i' representa a la hormiga k
+	 * 'j' representa a la cantidad de nodos que debe recorrer la hormiga
+	 *     para completar el trayecto*/
 	for(int i = 0; i < (int)this->grafo.Num_Of_Nodes;i++){
 		for(int j = 0; j < (int)this->grafo.Num_Of_Nodes;j++){
 			this->hormiguero.at(i).Move_To_The_Next_City();
@@ -56,7 +66,7 @@ void AntColony::Compute_Distances() {
 	//Obtener distancias de cada hormiga para elegir la mejor solución
 	for(int i = 0; i < (int)this->grafo.Num_Of_Nodes; i++){
 		this->hormiguero.at(i).Compute_Traveled_Distance();
-		//cout<<"Distancia recorrida: "<< this->hormiguero.at(i).Traveled_Distance << endl;
+		cout<<"Distancia recorrida: "<< this->hormiguero.at(i).Traveled_Distance << endl;
 		if(i == 0){
 			this->Best_Solution_Distance = this->hormiguero.at(i).Traveled_Distance;
 			this->Best_Solution = i;
@@ -72,17 +82,19 @@ void AntColony::Compute_Distances() {
 }
 
 void AntColony::Increment_Pheromones() {
+	int Jcounter = 0;
 	//incremento de feromonas en la ruta de la mejor hormiga
 	for(int j = 0; j < (int)this->grafo.Num_Of_Nodes;j++){
 		//cout<<"hormiga "<<j<<" Delta_T = "<<this->hormiguero.at(j).Delta_T<<endl;
 		this->hormiguero.at(j).Increment_Bridge_Pheromone();
 	}
 	//tes: Delete when no testing.....
-//	cout<<"la major solución es"<<endl;
+	cout<<"Incremento de feromona terminado"<<endl;
 	//cout<<"hormiga " << this->Best_Solution <<" con Distancia = "<<this->Best_Solution_Distance<< endl;
 	for(int i = 0; i < (int)this->grafo.Num_Of_Nodes;i++){
-		for(int j = 0; j < (int)this->grafo.Num_Of_Nodes;j++){
-			//cout<<"feromona en ij = ["<<i<<", "<<j<<"] = "<<this->grafo.Bridge_Pheromone.at(i).at(j)<<endl;
+		Jcounter++;
+		for(int j = Jcounter; j < (int)this->grafo.Num_Of_Nodes;j++){
+			cout<<"feromona en ij = ["<<i<<", "<<j<<"] = "<<this->grafo.Bridge_Pheromone.at(i).at(j)<<endl;
 		}
 	}
 }
@@ -90,11 +102,6 @@ void AntColony::Increment_Pheromones() {
 void AntColony::Evaporate_Pheromones() {
 	//evaporación de feromonas en todo el mapa
 	this->grafo.Evaporate_Pheromones();
-	for(int i = 0; i < (int)this->grafo.Num_Of_Nodes;i++){
-		for(int j = 0; j < (int)this->grafo.Num_Of_Nodes;j++){
-		//	cout<<"feromona en ij = ["<<i<<", "<<j<<"] = "<<this->grafo.Bridge_Pheromone.at(i).at(j)<<endl;
-		}
-	}
 }
 
 void AntColony::Initialize_Colony() {
@@ -114,7 +121,5 @@ void AntColony::Restart_Ants() {
 	//Reboot Ants, to reuse all again
 	for(int i = 0; i<(int)this->hormiguero.size() ; i++){
 		this->hormiguero.at(i).Reboot(&this->grafo, i);
-		while(!this->hormiguero.at(i).Visited_Cities.empty())
-			this->hormiguero.at(i).Visited_Cities.pop_back();
 	}
 }

@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 	colonia.Retreive_Datos_From_File(argv[1]);
 	colonia.Initialize_Colony();
 	colonia.grafo.ro = 0.5;
-	for(int i= 0; i < 10; i++){
+	for(int i= 0; i < 1; i++){
 		colonia.Execute_Cycle();
 		hormigas_campeonas.push_back(colonia.hormiguero.at(colonia.Best_Solution));
 	}
