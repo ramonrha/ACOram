@@ -1,0 +1,33 @@
+#!/usr/bin/gnuplot
+#
+# Plotting the data of file plotting_data3.dat
+#
+# AUTHOR: Hagen Wierstorf
+
+reset
+
+# png
+set terminal pngcairo size 800,600 enhanced font 'Verdana,10'
+set output 'plotting_data.png'
+
+set border linewidth 1.5
+# Set first two line styles to blue (#0060ad) and red (#dd181f)
+set style line 1 \
+    linecolor rgb '#00509d' \
+    linetype 1 linewidth 10 \
+    pointtype 7 pointsize 1.5
+set style line 2 \
+    linecolor rgb '#dd181f' \
+    linetype 10 linewidth 2 \
+    pointtype 5 pointsize 1.5
+
+unset key
+
+set ytics 1
+set tics scale 0.25
+
+set xrange [-1:101]
+set yrange [-1:101]
+set datafile separator ','
+plot 'inputs.csv' with points, \
+     'outputs.csv' with linespoints linestyle 2

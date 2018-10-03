@@ -68,14 +68,13 @@ void Ant::Move_To_The_Next_City(void) {
 			continue;
 		}else{
 			Probability_ij = this->Probability_For_Next_Move(i);
-			if(Probability_ij >= this->Probability_ij){
+			if(Probability_ij > this->Probability_ij){
 				this->Next_Cyti = i;
 				this->Probability_ij = Probability_ij;
 			}
-
 		}
 	}
-	//begin travel to the next city
+	//begin travel to the next city if any
 	if(this->Actual_City != this->Next_Cyti)
 		this->Visited_Cities.push_back(this->Next_Cyti);
 	this->Actual_City = this->Next_Cyti;
